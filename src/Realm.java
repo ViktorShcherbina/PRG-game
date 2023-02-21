@@ -6,8 +6,7 @@ public class Realm {
     private static BufferedReader br;
     private static Character player = null;
     private static BattleScene battleScene = null;
-    private static Character defender = createMonster();
-    private static Merchendiser merchendiser = null;
+    private static final Merchendiser merchendiser = new Merchendiser();
 
     public static void main(String[] args) {
         br = new BufferedReader(new InputStreamReader(System.in));
@@ -35,17 +34,24 @@ public class Realm {
             printNavigation();
         }
         switch (string) {
-            case "1" -> {
-                //               System.out.println("Торговец еще не приехал");
-//                commitSell();
-                merchantTime();
-                command(br.readLine());
-            }
-            case "2" -> {
-                commitFight();
-            }
+            case "1" -> merchantTime();
+            case "2" -> commitFight();
             case "3" -> System.exit(1);
-            case "4" -> System.out.println(player);
+            case "4" -> {
+                System.out.println("Ваше здоровье " + player.getHealth());
+                System.out.println("У Вас " + player.getGold() + " золота");
+                System.out.println("Ваш опыт " + player.getXp());
+                System.out.println("Ваш уровень " + player.getXp() / 100);
+                printNavigation();
+            }
+            case "5" -> {
+                merchendiser.sell(Merchendiser.Goods.POTION, player);
+                System.out.println("Вернуться в бой? (да/нет)");
+            }
+            case "6" -> {
+                merchendiser.sell(Merchendiser.Goods.FLAMETHROWER, player);
+                System.out.println("Вернуться в бой? (да/нет)");
+            }
             case "да" -> command("2");
             case "нет" -> {
                 printNavigation();
@@ -98,7 +104,7 @@ public class Realm {
         if (random % 2 == 0) return new Goblin(
                 "Гоблин",
                 50,
-                10,
+                20,
                 10,
                 100,
                 20
@@ -106,14 +112,14 @@ public class Realm {
         else return new Skeleton(
                 "Скелет",
                 25,
-                20,
+                10,
                 20,
                 100,
                 20
         );
     }
 
-    //
+    // Первый вариант лечения
 //    private static void commitSell() {
 //
 //        int restoredHealth = 100;
@@ -126,35 +132,10 @@ public class Realm {
 //        System.out.println("Желаете продолжить поход или вернуться в город? (да/нет)");
 //
 //    }
-    private static void merchantTime() throws IOException {
+    private static void merchantTime() {
         System.out.println("Что вы хотите купить?");
-        System.out.println("1. Зелье лечения");
-        System.out.println("2. Огнемёт");
+        System.out.println("5. Зелье лечения");
+        System.out.println("6. Огнемёт");
 
-        switch (br.readLine()) {
-            case "1":
-                merchendiser.sell(Merchendiser.Goods.POTION, player);
-                System.out.println("Что-то еще? (да/нет)");
-                switch (br.readLine()) {
-                    case "да":
-                        merchantTime();
-                    case "нет":
-                        printNavigation();
-                        command(br.readLine());
-                }
-            case "2":
-                merchendiser.sell(Merchendiser.Goods.FLAMETHROWER, player);
-                System.out.println("Что-то еще? (да/нет)");
-                switch (br.readLine()) {
-                    case "да":
-                        merchantTime();
-                    case "нет":
-                        printNavigation();
-                        command(br.readLine());
-                }
-
-        }
     }
 }
-
-

@@ -53,6 +53,7 @@ public abstract class Character {
     public void setGold(int gold) {
         this.gold = gold;
     }
+
     public Character(String name, int health, int strength, int dex, int xp, int gold) {
         this.name = name;
         this.health = health;

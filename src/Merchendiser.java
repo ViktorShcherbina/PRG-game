@@ -4,10 +4,19 @@ public class Merchendiser implements Seller {
         switch (goods) {
             case POTION -> {
                 res = "potion";
-                player.setHealth(player.getHealth() + 20);
-                System.out.println("Теперь ваше здоровье равно " + player.getHealth());
+
+                if (player.getGold() <= 0) {
+                    System.out.println("У Вас недостаточно золота!");
+                } else if (player.getGold() > 0 & player.getHealth() < 100) {
+                    player.setGold(player.getGold() - 20);
+                    System.out.println("У Вас осталось золота " + player.getGold());
+                    player.setHealth(player.getHealth() + 20);
+                    System.out.println("Теперь ваше здоровье равно " + player.getHealth());
+                } else {
+                    System.out.println("Вы абсолютно здоровы!");
+                }
             }
-            case FLAMETHROWER-> {
+            case FLAMETHROWER -> {
                 res = "flamethrower";
                 System.out.println("Извините, огнемёты закончились(((");
             }

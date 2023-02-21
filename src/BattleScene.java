@@ -22,37 +22,47 @@ public class BattleScene {
         };
         Thread thread = new Thread(runnable);
         thread.start();
+
+
     }
 
     private Boolean makeHit(Character defender, Character attacker, Realm.FightCallback fightCallback) {
         int random = (int) (Math.random() * 10);
         int hit = attacker.attack();
         int defenderHealth = defender.getHealth() - hit;
-        int powerFul = attacker.attack() * 3;
+        int powerFul = attacker.attack() * 2;
+        int defenderHealthSuper = defender.getHealth() - powerFul;
 
         if (hit != 0) {
             System.out.println(String.format("%s Нанес удар в %d единиц!", attacker.getName(), hit));
             System.out.println(String.format("У %s осталось %d единиц здоровья...", defender.getName(), defenderHealth));
-        } else if (powerFul != 0 && (random % 2) == 0) {
+        } else if ((random % 2 == 0) && powerFul != 0) {
             System.out.println(String.format("%s Нанес супер удар в %d единиц!", attacker.getName(), powerFul));
-            System.out.println(String.format("У %s осталось %d единиц здоровья...", defender.getName(), defenderHealth - powerFul));
+            System.out.println(String.format("У %s осталось %d единиц здоровья...", defender.getName(), defenderHealthSuper));
         } else {
             System.out.println(String.format("%s промахнулся!", attacker.getName()));
         }
 
-        if (defenderHealth <= 0 && (defenderHealth - powerFul) <= 0 && defender instanceof Hero) {
+        if ((defenderHealth <= 0 ^ defenderHealthSuper <= 0) && defender instanceof Hero) {
             System.out.println("Извините, вы пали в бою...");
             fightCallback.fightLost();
             return true;
-        } else if (defenderHealth <= 0) {
+        } else if ((defenderHealth <= 0 || defenderHealthSuper <= 0)) {
             System.out.println(String.format("Враг повержен! Вы получаете %d опыт и %d золота", defender.getXp(), defender.getGold()));
             attacker.setXp(attacker.getXp() + defender.getXp());
             attacker.setGold(attacker.getGold() + defender.getGold());
             fightCallback.fightWin();
             return true;
         } else {
-            defender.setHealth(defenderHealth);
+            if (hit != 0) {
+                defender.setHealth(defenderHealth);
+            }
+            if (powerFul != 0) {
+                defender.setHealth(defenderHealthSuper);
+            }
             return false;
+
         }
     }
 }
+// && !(defender instanceof Hero)
